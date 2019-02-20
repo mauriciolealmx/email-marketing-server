@@ -1,6 +1,19 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const mongoose = require('mongoose');
 const keys = require('../config/keys');
+
+const User = mongoose.model('users');
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  User.findById(id).then(user => {
+    done(null, user);
+  });
+});
 
 passport.use(
   // Google strategy gets registered as 'google'.
@@ -11,8 +24,16 @@ passport.use(
       // The user will be sent to this URL after granting permission.
       callbackURL: '/auth/google/callback',
     },
-    accessToken => {
-      console.log(accessToken);
+    (accessToken, refreshToken, profile, done) => {
+      User.findOne({ googleId: profile.id }).then(existingUser => {
+        if (existingUser) {
+          // we already haeve a record.
+          done(null, existingUser);
+        } else {
+          // No record
+          new User({ googleId: profile.id }).save().then(user => done(null, user));
+        }
+      });
     }
   )
 );

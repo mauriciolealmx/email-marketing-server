@@ -26,16 +26,18 @@ passport.use(
       // Make sure Heroku proxy is trusted and maintain https.
       proxy: true,
     },
-    (accessToken, refreshToken, profile, done) => {
-      User.findOne({ googleId: profile.id }).then(existingUser => {
-        if (existingUser) {
-          // we already haeve a record.
-          done(null, existingUser);
-        } else {
-          // No record
-          new User({ googleId: profile.id }).save().then(user => done(null, user));
-        }
-      });
+    async (accessToken, refreshToken, profile, done) => {
+      console.log('Testing profile in heroku', profile);
+      const existingUser = await User.findOne({ googleId: profile.id });
+      console.log('After maybe finding a user.', existingUser);
+      if (existingUser) {
+        // we already haeve a record.
+        done(null, existingUser);
+      } else {
+        // No record
+        const user = await new User({ googleId: profile.id }).save();
+        done(null, user);
+      }
     }
   )
 );

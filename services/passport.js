@@ -27,16 +27,18 @@ passport.use(
       proxy: true,
     },
     async (accessToken, refreshToken, profile, done) => {
-      console.log('Testing profile in heroku', profile);
-      const existingUser = await User.findOne({ googleId: profile.id });
-      console.log('After maybe finding a user.', existingUser);
-      if (existingUser) {
-        // we already haeve a record.
-        done(null, existingUser);
-      } else {
-        // No record
-        const user = await new User({ googleId: profile.id }).save();
-        done(null, user);
+      try {
+        const existingUser = await User.findOne({ googleId: profile.id });
+        if (existingUser) {
+          // we already haeve a record.
+          done(null, existingUser);
+        } else {
+          // No record
+          const user = await new User({ googleId: profile.id }).save();
+          done(null, user);
+        }
+      } catch (err) {
+        console.log(err);
       }
     }
   )

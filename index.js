@@ -8,13 +8,7 @@ const keys = require('./config/keys');
 require('./models/User');
 require('./services/passport');
 
-mongoose.connect(keys.mongoURI, err => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log('Connected to mongo');
-  }
-});
+mongoose.connect(keys.mongoURI);
 
 const app = express();
 

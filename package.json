@@ -9,12 +9,15 @@
   },
   "scripts": {
     "start": "node index.js",
-    "start:live": "nodemon index.js"
+    "server:live": "nodemon index.js",
+    "client:live": "npm run start --prefix client",
+    "start:live": "concurrently \"npm run server:live\" \"npm run client:live\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^4.1.0",
     "cookie-session": "^2.0.0-beta.3",
     "express": "^4.16.4",
     "mongoose": "^5.4.14",

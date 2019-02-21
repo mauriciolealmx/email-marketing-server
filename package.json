@@ -11,7 +11,8 @@
     "start": "node index.js",
     "server:live": "nodemon index.js",
     "client:live": "npm run start --prefix client",
-    "start:live": "concurrently \"npm run server:live\" \"npm run client:live\""
+    "start:live": "concurrently \"npm run server:live\" \"npm run client:live\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "keywords": [],
   "author": "",

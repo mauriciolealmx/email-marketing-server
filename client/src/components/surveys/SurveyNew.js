@@ -18,4 +18,12 @@ class SurveyNew extends Component {
   }
 }
 
-export default SurveyNew;
+/**
+ * Added surveyForm here to clear the values of SurveyForm component:
+ * Values will be cleared when the user is no longer creating or
+ * reviewing the form. This is possible because SurveyNew is a parent
+ * of both SurveyForm and SurveyFormReview.
+ */
+export default reduxForm({
+  form: 'surveyForm',
+})(SurveyNew);
